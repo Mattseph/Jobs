@@ -1,11 +1,15 @@
 <script setup>
+
 import router from '@/router';
 import { reactive } from "vue";
 import axios from 'axios';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 const form = reactive({
   type: "Full-Time",
-  name: "Fullstack",
+  title: "Fullstack",
   description: "",
   salary: "",
   location: "",
@@ -20,7 +24,7 @@ const form = reactive({
 const handleSubmit = async () => {
   const addedJob = {
     type: form.type,
-    name: form.name,
+    title: form.title,
     description: form.description,
     salary: form.salary,
     location: form.location,
@@ -34,12 +38,16 @@ const handleSubmit = async () => {
 
   try {
     const response = await axios.post("/api/jobs", addedJob);
+    toast.success("Job Added Successfully"); 
     router.push(`/jobs/${response.data.id}`);
   } catch (error) {
+    toast.error("Failed to Add Job");
     console.log("Adding Job Failed", error);
   }
 };
+
 </script>
+
 <template>
   <section class="bg-green-50">
     <div class="container m-auto max-w-2xl py-24">
@@ -72,10 +80,10 @@ const handleSubmit = async () => {
               >Job Listing Name</label
             >
             <input
-              v-model="form.name"
+              v-model="form.title"
               type="text"
-              id="name"
-              name="name"
+              id="title"
+              name="title"
               class="border rounded w-full py-2 px-3 mb-2"
               placeholder="eg. Beautiful Apartment In Miami"
               required
