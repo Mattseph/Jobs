@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import BackButton from "@/components/BackButton.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -31,7 +32,7 @@ const state = reactive({
 });
 
 const handleSubmit = async () => {
-  const addedJob = {
+  const updatedJob = {
     type: form.type,
     title: form.title,
     description: form.description,
@@ -46,12 +47,12 @@ const handleSubmit = async () => {
   };
 
   try {
-    const response = await axios.post("/api/jobs", addedJob);
-    toast.success("Job Added Successfully");
+    const response = await axios.put(`/api/jobs/${jobId}`, updatedJob);
+    toast.success("Job Updted Successfully");
     router.push(`/jobs/${response.data.id}`);
   } catch (error) {
-    toast.error("Failed to Add Job");
-    console.log("Adding Job Failed", error);
+    toast.error("Failed to Update Job");
+    console.log("Updating Job Failed", error);
   }
 };
 
@@ -78,6 +79,7 @@ onMounted(async () => {
 });
 </script>
 <template>
+  <BackButton />
   <section v-if="!state.isLoading" class="bg-green-50">
     <div class="container m-auto max-w-2xl py-24">
       <div
@@ -239,7 +241,7 @@ onMounted(async () => {
               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              Uodate Job
+              Update Job
             </button>
           </div>
         </form>
